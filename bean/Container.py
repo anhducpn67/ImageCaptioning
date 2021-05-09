@@ -10,5 +10,9 @@ class Container:
         return super().__getattribute__(name)
 
     def __init__(self):
-        self.TRAIN_CAPTIONS = None
-        self.TRAIN_IMG_PATH = None
+        self.RAW_CAPTIONS = None
+        self.RAW_IMAGES_PATH = None
+
+        self.CAPTIONS_FEATURES_VECTOR = None
+        self.IMAGES_FEATURES_VECTOR = None
+        self.MAX_CAPTIONS_LENGTH = None

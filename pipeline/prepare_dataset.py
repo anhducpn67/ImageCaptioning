@@ -1,5 +1,6 @@
 import collections
 import json
+import pickle
 import random
 
 import project_config as config
@@ -7,8 +8,8 @@ import project_config as config
 
 class PrepareDataset:
     def __init__(self, container):
-        self.train_img_path = []
-        self.train_captions = []
+        self.raw_images_path = []
+        self.raw_captions = []
         self.container = container
         self.image_path_to_caption = collections.defaultdict(list)
         self.train_image_paths = list()
@@ -30,18 +31,30 @@ class PrepareDataset:
     def get_train_data(self):
         for image_path in self.train_image_paths:
             caption_list = self.image_path_to_caption[image_path]
-            self.train_captions.extend(caption_list)
-            self.train_img_path.extend([image_path] * len(caption_list))
+            self.raw_captions.extend(caption_list)
+            self.raw_images_path.extend([image_path] * len(caption_list))
 
     def push_data_to_container(self):
-        self.container.TRAIN_CAPTIONS = self.train_captions
-        self.container.TRAIN_IMG_PATH = self.train_img_path
+        self.container.RAW_CAPTIONS = self.raw_captions
+        self.container.RAW_IMAGES_PATH = self.raw_images_path
+
+    def cache_data(self):
+        pickle.dump(self.raw_captions, open(config.RAW_CAPTIONS_PATH, 'wb'))
+        pickle.dump(self.raw_images_path, open(config.RAW_IMAGES_PATH, 'wb'))
+
+    def load_data_from_cache(self):
+        self.container.RAW_CAPTIONS = pickle.load(open(config.RAW_CAPTIONS_PATH, 'rb'))
+        self.container.RAW_IMAGES_PATH = pickle.load(open(config.RAW_IMAGES_PATH, 'rb'))
 
     def execute(self):
-        self.get_image_path_to_caption()
-        self.get_train_image_paths()
-        if config.SIZE_LIMIT_IMG_DATASET is not None:
-            self.limit_dataset()
-        self.get_train_data()
-        self.push_data_to_container()
+        if config.IS_CACHE_PREPROCESSED_DATA:
+            self.load_data_from_cache()
+        else:
+            self.get_image_path_to_caption()
+            self.get_train_image_paths()
+            if config.SIZE_LIMIT_IMG_DATASET is not None:
+                self.limit_dataset()
+            self.get_train_data()
+            self.push_data_to_container()
+            self.cache_data()
         return self.container
