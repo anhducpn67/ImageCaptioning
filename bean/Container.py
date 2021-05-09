@@ -10,4 +10,5 @@ class Container:
         return super().__getattribute__(name)
 
     def __init__(self):
-        pass
+        self.TRAIN_CAPTIONS = None
+        self.TRAIN_IMG_PATH = None
