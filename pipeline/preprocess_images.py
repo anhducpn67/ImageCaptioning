@@ -62,7 +62,9 @@ class PreprocessImages:
         self.container.IMAGES_FEATURES_VECTOR = pickle.load(open(config.IMAGE_FEATURES_VECTOR_PATH, 'rb'))
 
     def execute(self):
+        print("Preprocessing images...")
         if config.IS_CACHE_PREPROCESSED_DATA:
+            self.load_pretrained_inception_v3_model()
             self.load_data_from_cache()
         else:
             self.load_pretrained_inception_v3_model()
@@ -71,4 +73,5 @@ class PreprocessImages:
             self.get_image_features_vector()
             self.push_data_to_container()
             self.cache_data()
+        print("Done!")
         return self.container

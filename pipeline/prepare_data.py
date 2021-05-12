@@ -47,6 +47,7 @@ class PrepareDataset:
         self.container.RAW_IMAGES_PATH = pickle.load(open(config.RAW_IMAGES_PATH, 'rb'))
 
     def execute(self):
+        print("Preparing data...")
         if config.IS_CACHE_PREPROCESSED_DATA:
             self.load_data_from_cache()
         else:
@@ -57,4 +58,5 @@ class PrepareDataset:
             self.get_train_data()
             self.push_data_to_container()
             self.cache_data()
+        print("Done!")
         return self.container

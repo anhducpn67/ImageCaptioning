@@ -15,4 +15,13 @@ class Container:
 
         self.CAPTIONS_FEATURES_VECTOR = None
         self.IMAGES_FEATURES_VECTOR = None
+
         self.MAX_CAPTIONS_LENGTH = None
+        self.TOKENIZER = None
+        self.NUM_STEPS = None
+
+        self.TRAIN_DATASET = None
+        self.VAL_IMAGES = None
+        self.VAL_CAPTIONS = None
+        self.VAL_IMAGES_PATH = None
+        self.ATTENTION_MODEL = None
